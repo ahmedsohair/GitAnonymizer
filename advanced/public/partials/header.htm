@@ -1,0 +1,122 @@
+<nav
+  class="navbar navbar-expand-lg navbar-dark vm-navbar"
+  ng-class="{'shadow': !generalMessage}"
+>
+  <a class="navbar-brand vm-brand" href="/">
+    <span class="vm-brand-mark">GA</span>
+    <span>GitAnonymizer</span>
+  </a>
+  <button
+    class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarSupportedContent"
+    aria-controls="navbarSupportedContent"
+    aria-expanded="false"
+    aria-label="Toggle navigation"
+  >
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto smooth-scroll">
+      <li class="nav-item" ng-if="!user">
+        <a class="nav-link" ng-class="{'active': path == '/'}" href="/">
+          Home
+        </a>
+      </li>
+      <li class="nav-item" ng-if="user">
+        <a
+          class="nav-link"
+          ng-class="{'active': path.indexOf('/dashboard') === 0}"
+          href="/dashboard"
+        >
+          Dashboard
+        </a>
+      </li>
+      <li class="nav-item" ng-if="user">
+        <a
+          class="nav-link"
+          ng-class="{'active':path == '/anonymize'}"
+          href="/anonymize"
+          >Anonymize Repo</a
+        >
+      </li>
+      <li class="nav-item" ng-if="user">
+        <a
+          class="nav-link"
+          ng-class="{'active':path == '/pull-request-anonymize'}"
+          href="/pull-request-anonymize"
+          >Anonymize PR</a
+        >
+      </li>
+      <li class="nav-item dropdown" ng-if="user">
+        <a
+          class="nav-link dropdown-toggle"
+          href="#"
+          id="navbarDropdownMenuLink"
+          role="button"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+          ng-if="user.isAdmin"
+        >
+          Admin
+        </a>
+        <div
+          class="dropdown-menu"
+          aria-labelledby="navbarDropdownMenuLink"
+        >
+          <a class="dropdown-item" href="/admin/">Repositories</a>
+          <a class="dropdown-item" href="/admin/users">Users</a>
+          <a class="dropdown-item" href="/admin/queues">Queues</a>
+        </div>
+      </li>
+    </ul>
+    <ul class="navbar-nav align-items-lg-center">
+      <li class="nav-item">
+        <a class="nav-link" ng-class="{'active':path == '/about' || path == '/faq'}" href="/about"
+          >About</a
+        >
+      </li>
+
+      <li class="nav-item" ng-if="!user">
+        <a class="nav-link vm-login-link" target="_self" href="/github/login" data-offset="30"
+          >Login
+        </a>
+      </li>
+      <li class="nav-item dropdown" ng-if="user">
+        <a
+          class="nav-link dropdown-toggle"
+          href="#"
+          id="navbarDropdownMenuLink"
+          role="button"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          <img
+            ng-src="{{user.photo}}"
+            ng-if="user.photo"
+            width="30"
+            height="30"
+            class="rounded-circle"
+          />
+          {{user.username}}
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item" href="/profile">Defaults</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="/api/user/logout" target="__self"
+            >Logout</a
+          >
+        </div>
+      </li>
+    </ul>
+  </div>
+</nav>
+<div
+  class="navbar shadow generalMessage"
+  ng-bind-html="generalMessage"
+  ng-if="generalMessage"
+></div>

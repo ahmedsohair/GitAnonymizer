@@ -1,0 +1,14 @@
+.venv/
+__pycache__/
+.pytest_cache/
+*.pyc
+node_modules/
+dist/
+backend/app.db
+storage/
+.env
+advanced/node_modules/
+advanced/build/
+advanced/repositories/
+advanced/db_backups/
+advanced/.env

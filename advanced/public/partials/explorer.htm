@@ -1,0 +1,40 @@
+<div class="container-fluid vm-explorer-shell h-100 p-0">
+  <div class="row h-100 no-gutters">
+    <aside class="vm-explorer-sidebar shadow p-1 overflow-auto h-100" ng-show="files.length">
+      <div class="vm-explorer-sidebar-header">
+        <div class="vm-explorer-repo-id">/{{repoId}}</div>
+        <small>Anonymous file tree</small>
+      </div>
+      <tree class="files" file="files"></tree>
+      <div class="vm-explorer-sidebar-footer">
+        <div class="last-update" data-toggle="tooltip" data-placement="top" title="{{options.lastUpdateDate}}">
+          Last Sync: {{options.lastUpdateDate | date}}
+        </div>
+      </div>
+    </aside>
+
+    <main class="col-md h-100 overflow-auto p-0 d-flex flex-column">
+      <div class="status-bar shadow vm-explorer-toolbar">
+        <div class="d-flex align-items-center flex-grow-1 min-w-0">
+          <span class="vm-toolbar-label mr-2">Path</span>
+          <ol class="flex-grow-1 breadcrumb paths mb-0">
+            <li class="breadcrumb-item" ng-repeat="p in paths" ng-bind="p">Loading...</li>
+          </ol>
+        </div>
+        <div class="vm-toolbar-actions">
+          <button class="btn btn-outline-primary btn-sm" type="button" ng-click="copyCurrentLink()">
+            <i class="far fa-copy"></i> Copy Link
+          </button>
+          <a ng-if="options.isAdmin || options.isOwner" ng-href="/anonymize/{{repoId}}" class="btn btn-outline-primary btn-sm">Edit</a>
+          <a ng-show="content != null" ng-href="{{url}}" target="__self" class="btn btn-outline-primary btn-sm">View raw</a>
+          <a ng-show="content != null" ng-href="{{url}}&download=true" target="__self" class="btn btn-outline-primary btn-sm">Download file</a>
+          <a ng-if="options.download" ng-href="/api/repo/{{repoId}}/zip" target="__self" class="btn btn-outline-primary btn-sm">Download anonymous snapshot</a>
+          <a ng-if="options.hasWebsite" ng-href="/w/{{repoId}}/" target="__self" class="btn btn-outline-primary btn-sm">Website</a>
+        </div>
+      </div>
+      <div class="align-items-stretch h-100 w-100 overflow-auto">
+        <ng-include src="'./partials/pageView.htm'"></ng-include>
+      </div>
+    </main>
+  </div>
+</div>

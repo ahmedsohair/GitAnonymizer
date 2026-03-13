@@ -1,0 +1,67 @@
+<div class="container py-4">
+  <h2>Status of <strong ng-bind="repoId"></strong></h2>
+
+  <section class="py-4">
+    <h3>Processing progress</h3>
+
+    <p>
+      GitAnonymizer is preparing your anonymized snapshot. Large repositories take longer.
+      Review <a href="/about">About</a> for operational details.
+    </p>
+
+    <div class="progress" style="height: 25px">
+      <div
+        class="progress-bar"
+        role="progressbar"
+        style="width: {{progress}}%;"
+        aria-valuenow="{{progress}}"
+        aria-valuemin="0"
+        aria-valuemax="100"
+      >
+        <span>
+          {{repo.status | title}}
+          <span ng-if="repo.statusMessage">: {{repo.statusMessage | title}}</span>
+        </span>
+      </div>
+    </div>
+
+    <p class="mt-3">
+      Anonymous URL:
+      <a href="/r/{{repoId}}/" target="__self">/r/{{repoId}}/</a>
+    </p>
+    <p ng-if="repo.options.page">
+      Page URL:
+      <a href="/w/{{repoId}}/" target="__self">/w/{{repoId}}/</a>
+    </p>
+
+    <p class="text-center">
+      <a class="btn btn-primary" href="/r/{{repoId}}/" target="__self" ng-if="repo.status == 'ready'">
+        Open anonymous view
+      </a>
+      <a class="btn" href="/w/{{repoId}}/" target="__self" ng-if="repo.options.page && repo.status == 'ready'">
+        Open anonymous page
+      </a>
+    </p>
+  </section>
+
+  <section class="py-4">
+    <h3>What you can do next</h3>
+    <div class="row text-center">
+      <div class="col-lg-4 mb-3">
+        <i class="rounded-circle fa fa-eye"></i>
+        <h4>Verify</h4>
+        <p>Open your anonymous view and check that code, markdown, and media render as expected.</p>
+      </div>
+      <div class="col-lg-4 mb-3">
+        <i class="rounded-circle fa fa-sliders-h"></i>
+        <h4>Adjust</h4>
+        <p>Edit terms and options in the anonymize form, then force an update from dashboard.</p>
+      </div>
+      <div class="col-lg-4 mb-3">
+        <i class="rounded-circle fa fa-share-alt"></i>
+        <h4>Share</h4>
+        <p>Share the `/r/{{repoId}}/` link in your submission workflow once status is ready.</p>
+      </div>
+    </div>
+  </section>
+</div>

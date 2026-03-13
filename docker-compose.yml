@@ -1,0 +1,156 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: mirrors
+      POSTGRES_USER: mirrors
+      POSTGRES_PASSWORD: mirrors
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mirrors -d mirrors"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+
+  backend:
+    build: ./backend
+    environment:
+      DATABASE_URL: postgresql+psycopg2://mirrors:mirrors@postgres:5432/mirrors
+      REDIS_URL: redis://redis:6379/0
+      MIRROR_STORAGE_ROOT: /data/mirrors
+      TEMP_ROOT: /data/tmp
+      DEFAULT_URL_TTL_DAYS: 90
+    volumes:
+      - mirror_data:/data
+    ports:
+      - "8000:8000"
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  worker:
+    build: ./backend
+    environment:
+      DATABASE_URL: postgresql+psycopg2://mirrors:mirrors@postgres:5432/mirrors
+      REDIS_URL: redis://redis:6379/0
+      MIRROR_STORAGE_ROOT: /data/mirrors
+      TEMP_ROOT: /data/tmp
+      DEFAULT_URL_TTL_DAYS: 90
+    volumes:
+      - mirror_data:/data
+    command: python worker.py
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+
+  advanced-app:
+    profiles: ["advanced"]
+    build: ./advanced
+    environment:
+      PORT: 5000
+      REDIS_HOSTNAME: advanced-redis
+      REDIS_PORT: 6379
+      DB_HOSTNAME: advanced-mongodb
+      DB_USERNAME: admin
+      DB_PASSWORD: password
+      MONGODB_URI: ${ADVANCED_MONGODB_URI:-}
+      STREAMER_ENTRYPOINT: http://advanced-streamer:5000/
+      APP_BASE_URL: ${ADVANCED_APP_BASE_URL:-http://localhost:5000}
+      AUTH_CALLBACK: ${ADVANCED_AUTH_CALLBACK:-http://localhost:5000/github/auth}
+      APP_HOSTNAME: ${ADVANCED_APP_HOSTNAME:-localhost}
+      TRUST_PROXY: ${ADVANCED_TRUST_PROXY:-1}
+      REDIS_URL: ${ADVANCED_REDIS_URL:-}
+      SESSION_SECRET: change_me
+      CLIENT_ID: ${ADVANCED_GITHUB_CLIENT_ID:-}
+      CLIENT_SECRET: ${ADVANCED_GITHUB_CLIENT_SECRET:-}
+      GITHUB_TOKEN: ""
+    ports:
+      - "5000:5000"
+    volumes:
+      - advanced_repo_data:/app/repositories
+    depends_on:
+      advanced-mongodb:
+        condition: service_healthy
+      advanced-redis:
+        condition: service_started
+      advanced-streamer:
+        condition: service_started
+
+  advanced-streamer:
+    profiles: ["advanced"]
+    build: ./advanced
+    entrypoint: ["node", "--require", "./opentelemetry.js", "./build/streamer/index.js"]
+    environment:
+      PORT: 5000
+      SERVICE_NAME: Streamer
+      REDIS_HOSTNAME: advanced-redis
+      REDIS_PORT: 6379
+      DB_HOSTNAME: advanced-mongodb
+      DB_USERNAME: admin
+      DB_PASSWORD: password
+      MONGODB_URI: ${ADVANCED_MONGODB_URI:-}
+      APP_BASE_URL: ${ADVANCED_APP_BASE_URL:-http://localhost:5000}
+      AUTH_CALLBACK: ${ADVANCED_AUTH_CALLBACK:-http://localhost:5000/github/auth}
+      APP_HOSTNAME: ${ADVANCED_APP_HOSTNAME:-localhost}
+      TRUST_PROXY: ${ADVANCED_TRUST_PROXY:-1}
+      REDIS_URL: ${ADVANCED_REDIS_URL:-}
+      SESSION_SECRET: change_me
+      CLIENT_ID: ${ADVANCED_GITHUB_CLIENT_ID:-}
+      CLIENT_SECRET: ${ADVANCED_GITHUB_CLIENT_SECRET:-}
+      GITHUB_TOKEN: ""
+    volumes:
+      - advanced_repo_data:/app/repositories
+    depends_on:
+      advanced-mongodb:
+        condition: service_healthy
+      advanced-redis:
+        condition: service_started
+
+  advanced-redis:
+    profiles: ["advanced"]
+    image: redis:7-alpine
+
+  advanced-mongodb:
+    profiles: ["advanced"]
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+    volumes:
+      - advanced_mongo_data:/data/db
+    command: --quiet
+    healthcheck:
+      test:
+        - CMD
+        - mongosh
+        - --eval
+        - "db.adminCommand('ping')"
+      interval: 10s
+      timeout: 10s
+      retries: 10
+
+volumes:
+  pg_data:
+  redis_data:
+  mirror_data:
+  advanced_repo_data:
+  advanced_mongo_data:

@@ -1,0 +1,123 @@
+<div class="vm-home">
+  <section class="vm-hero">
+    <div class="vm-hero-bg-shape"></div>
+    <div class="container py-5">
+      <div class="row align-items-center">
+        <div class="col-lg-7 mb-4 mb-lg-0">
+          <p class="vm-kicker">Private by design</p>
+          <h1 class="vm-title">GitAnonymizer</h1>
+          <p class="vm-subtitle">
+            Publish anonymous repository views for review workflows without leaking source identity.
+            Keep your links stable, apply redaction rules, and control expiry and updates from one workspace.
+          </p>
+          <div class="vm-hero-actions" ng-if="!user">
+            <a href="/github/login" target="_self" class="btn btn-primary btn-lg">Login with GitHub</a>
+            <a href="#usage" class="btn btn-outline-light btn-lg">See workflow</a>
+          </div>
+        </div>
+        <div class="col-lg-5">
+          <div class="vm-auth-card" ng-if="!user">
+            <h5>Quick login</h5>
+            <p class="mb-3 small">
+              Default flow uses platform-managed GitHub OAuth.
+            </p>
+            <a href="/github/login" target="_self" class="btn btn-primary btn-block mb-2">
+              Login with GitHub
+            </a>
+            <a
+              class="btn btn-secondary btn-block"
+              data-toggle="collapse"
+              href="#customOAuthOptions"
+              role="button"
+              aria-expanded="false"
+              aria-controls="customOAuthOptions"
+            >
+              Use custom OAuth app (optional)
+            </a>
+            <div class="collapse mt-3" id="customOAuthOptions">
+              <p class="mb-2 small">
+                If needed, provide your own GitHub OAuth app credentials.
+                Callback URL must be <code>https://&lt;your-domain&gt;/github/auth</code>.
+              </p>
+              <form method="post" action="/github/login" target="_self">
+                <div class="form-group mb-2">
+                  <input
+                    type="text"
+                    name="client_id"
+                    class="form-control"
+                    placeholder="GitHub OAuth Client ID"
+                    required
+                  />
+                </div>
+                <div class="form-group mb-3">
+                  <input
+                    type="password"
+                    name="client_secret"
+                    class="form-control"
+                    placeholder="GitHub OAuth Client Secret"
+                    required
+                  />
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Login with custom app</button>
+              </form>
+            </div>
+          </div>
+          <div class="vm-auth-card" ng-if="user">
+            <h5>Welcome back, {{user.username}}</h5>
+            <p class="mb-3">Open your workspace to manage anonymized links and sync jobs.</p>
+            <a href="/dashboard" class="btn btn-primary btn-block">Go to dashboard</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="usage" class="container py-5">
+    <div class="row">
+      <div class="col-md-4 mb-3">
+        <div class="vm-feature-card">
+          <div class="vm-feature-index">01</div>
+          <h4>Connect</h4>
+          <p>Authenticate with GitHub and select a repository or pull request to anonymize.</p>
+        </div>
+      </div>
+      <div class="col-md-4 mb-3">
+        <div class="vm-feature-card">
+          <div class="vm-feature-index">02</div>
+          <h4>Anonymize</h4>
+          <p>Apply term masking, metadata stripping, expiration policy, and rendering controls.</p>
+        </div>
+      </div>
+      <div class="col-md-4 mb-3">
+        <div class="vm-feature-card">
+          <div class="vm-feature-index">03</div>
+          <h4>Share</h4>
+          <p>Distribute the anonymous URL (`/r/&lt;id&gt;`) with optional page view and sync management.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="container pb-5">
+    <div class="row">
+      <div class="col-md-4 mb-3">
+        <div class="vm-stat-card">
+          <div class="vm-stat-value">{{stat.nbUsers|number}}</div>
+          <div class="vm-stat-label">Users</div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-3">
+        <div class="vm-stat-card">
+          <div class="vm-stat-value">{{stat.nbRepositories|number}}</div>
+          <div class="vm-stat-label">Repositories</div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-3">
+        <div class="vm-stat-card">
+          <div class="vm-stat-value">{{stat.nbPageViews|number}}</div>
+          <div class="vm-stat-label">Page Views</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

@@ -1,0 +1,65 @@
+<div class="container py-4">
+  <div class="row">
+    <div class="col-12 col-lg-10 offset-lg-1">
+      <h2 class="mb-3">About GitAnonymizer</h2>
+      <p class="lead">
+        GitAnonymizer is a GitHub anonymization platform for double-blind review workflows.
+        It creates and serves anonymized repository and pull request views, removes identity leaks,
+        and keeps content updated on a configurable schedule.
+      </p>
+
+      <section class="mb-4">
+        <h3>Origin and Credit</h3>
+        <p>
+          This project is inspired by and built on ideas from the original
+          <strong>anonymous4science</strong> work (<code>anonymous_github</code>).
+          Credit goes to that project for pioneering practical anonymized sharing for research submissions.
+        </p>
+      </section>
+
+      <section class="mb-4">
+        <h3>Why We Built This Version</h3>
+        <p>
+          During peak conference submission windows, shared public instances can become overloaded or unavailable.
+          We developed GitAnonymizer to reduce manual workload for authors and chairs by providing a stable,
+          self-managed deployment that stays responsive when deadlines approach.
+        </p>
+      </section>
+
+      <section class="mb-4">
+        <h3>What the Tool Does</h3>
+        <div class="card">
+          <div class="card-body">
+            <ol class="mb-0">
+              <li>Connects to GitHub with OAuth and reads repository or PR source content.</li>
+              <li>Applies anonymization rules to text content and metadata.</li>
+              <li>Publishes anonymous links for repositories (<code>/r/&lt;id&gt;</code>) and PRs (<code>/pr/&lt;id&gt;</code>).</li>
+              <li>Supports expiration policies, updates, and controlled visibility options.</li>
+              <li>Provides dashboard controls for refresh, removal, and monitoring.</li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <section class="mb-4">
+        <h3>Improvements in GitAnonymizer</h3>
+        <ul>
+          <li>Unified dashboard for repository and pull request management in one place.</li>
+          <li>Simplified top navigation and faster access to anonymization actions.</li>
+          <li>One-click copy buttons for generated anonymous links.</li>
+          <li>Auto-generated IDs with optional manual override for controlled sharing.</li>
+          <li>Cleaner default login flow for GitHub OAuth without extra setup in normal use.</li>
+          <li>Operational focus for peak periods to reduce submission-time friction and support load.</li>
+        </ul>
+      </section>
+
+      <section class="mb-4">
+        <h3>Operational Notes</h3>
+        <p class="mb-0">
+          GitAnonymizer is intended to improve reliability and usability, but anonymization quality still depends on
+          masking terms and configuration. Always review generated anonymous links before final submission.
+        </p>
+      </section>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,5 @@
+/repositories
+db_backups
+build
+node_modules
+.github

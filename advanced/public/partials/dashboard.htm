@@ -1,0 +1,354 @@
+<div class="container-fluid vm-workspace py-4">
+  <section class="vm-workspace-hero mb-3">
+    <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-lg-between">
+      <div>
+        <h2 class="mb-1">Dashboard</h2>
+        <p class="vm-muted mb-0">
+          Manage anonymized repositories and pull requests from one workspace.
+        </p>
+      </div>
+      <div class="d-flex flex-wrap mt-3 mt-lg-0">
+        <a href="/anonymize" class="btn btn-primary mr-2 mb-2">
+          <i class="fa fa-plus-circle" aria-hidden="true"></i> Anonymize Repo
+        </a>
+        <a href="/pull-request-anonymize" class="btn btn-secondary mb-2">
+          <i class="fa fa-plus-circle" aria-hidden="true"></i> Anonymize PR
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="vm-toolbar-panel mb-3">
+    <div class="btn-group mb-3" role="group" aria-label="Dashboard tabs">
+      <button
+        class="btn"
+        ng-class="{'btn-primary': activeTab == 'repositories', 'btn-secondary': activeTab != 'repositories'}"
+        ng-click="setActiveTab('repositories')"
+        type="button"
+      >
+        Repositories
+      </button>
+      <button
+        class="btn"
+        ng-class="{'btn-primary': activeTab == 'pull_requests', 'btn-secondary': activeTab != 'pull_requests'}"
+        ng-click="setActiveTab('pull_requests')"
+        type="button"
+      >
+        Pull Requests
+      </button>
+    </div>
+
+    <form aria-label="Repositories" accept-charset="UTF-8" ng-if="activeTab == 'repositories'">
+      <div class="row">
+        <div class="col-12 col-lg-6 mb-2 mb-lg-0">
+          <input
+            type="search"
+            class="form-control"
+            aria-label="Find a repository..."
+            placeholder="Search by anonymous id or source repository..."
+            autocomplete="off"
+            ng-model="repoSearch"
+          />
+        </div>
+        <div class="col-12 col-lg-6 d-flex flex-wrap justify-content-lg-end">
+          <div class="dropdown mr-2 mb-2">
+            <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Sort
+            </button>
+            <div class="dropdown-menu">
+              <h6 class="dropdown-header">Select order</h6>
+              <div class="form-check dropdown-item">
+                <input class="form-check-input" type="radio" name="repoSort" value="fullName" ng-model="repoOrderBy" />
+                <label class="form-check-label">Repository</label>
+              </div>
+              <div class="form-check dropdown-item">
+                <input class="form-check-input" type="radio" name="repoSort" value="-anonymizeDate" ng-model="repoOrderBy" />
+                <label class="form-check-label">Anonymize Date</label>
+              </div>
+              <div class="form-check dropdown-item">
+                <input class="form-check-input" type="radio" name="repoSort" value="-status" ng-model="repoOrderBy" />
+                <label class="form-check-label">Status</label>
+              </div>
+              <div class="form-check dropdown-item">
+                <input class="form-check-input" type="radio" name="repoSort" value="-lastView" ng-model="repoOrderBy" />
+                <label class="form-check-label">Last View</label>
+              </div>
+              <div class="form-check dropdown-item">
+                <input class="form-check-input" type="radio" name="repoSort" value="-pageView" ng-model="repoOrderBy" />
+                <label class="form-check-label">Page View</label>
+              </div>
+            </div>
+          </div>
+          <div class="dropdown mb-2">
+            <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Status
+            </button>
+            <div class="dropdown-menu">
+              <h6 class="dropdown-header">Select status</h6>
+              <div class="form-check dropdown-item">
+                <input class="form-check-input" type="checkbox" value="ready" ng-model="repoFilters.status.ready" />
+                <label class="form-check-label">Ready</label>
+              </div>
+              <div class="form-check dropdown-item">
+                <input class="form-check-input" type="checkbox" value="expired" ng-model="repoFilters.status.expired" />
+                <label class="form-check-label">Expired</label>
+              </div>
+              <div class="form-check dropdown-item">
+                <input class="form-check-input" type="checkbox" value="removed" ng-model="repoFilters.status.removed" />
+                <label class="form-check-label">Removed</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex flex-wrap mt-2">
+        <div class="alert alert-info alert-dismissible my-0 mr-2 mb-2" ng-show="!v" role="alert" ng-repeat="(f, v) in repoFilters.status">
+          <strong>{{f | title}}</strong>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="repoFilters.status[f] = true;">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <form aria-label="Pull Requests" accept-charset="UTF-8" ng-if="activeTab == 'pull_requests'">
+      <div class="row">
+        <div class="col-12 col-lg-6 mb-2 mb-lg-0">
+          <input
+            type="search"
+            class="form-control"
+            aria-label="Find a pull request..."
+            placeholder="Search by anonymous id, repository, or PR number..."
+            autocomplete="off"
+            ng-model="prSearch"
+          />
+        </div>
+        <div class="col-12 col-lg-6 d-flex flex-wrap justify-content-lg-end">
+          <div class="dropdown mr-2 mb-2">
+            <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Sort
+            </button>
+            <div class="dropdown-menu">
+              <h6 class="dropdown-header">Select order</h6>
+              <div class="form-check dropdown-item">
+                <input class="form-check-input" type="radio" name="prSort" value="pullRequestId" ng-model="prOrderBy" />
+                <label class="form-check-label">Pull Request</label>
+              </div>
+              <div class="form-check dropdown-item">
+                <input class="form-check-input" type="radio" name="prSort" value="-anonymizeDate" ng-model="prOrderBy" />
+                <label class="form-check-label">Anonymize Date</label>
+              </div>
+              <div class="form-check dropdown-item">
+                <input class="form-check-input" type="radio" name="prSort" value="-status" ng-model="prOrderBy" />
+                <label class="form-check-label">Status</label>
+              </div>
+              <div class="form-check dropdown-item">
+                <input class="form-check-input" type="radio" name="prSort" value="-lastView" ng-model="prOrderBy" />
+                <label class="form-check-label">Last View</label>
+              </div>
+              <div class="form-check dropdown-item">
+                <input class="form-check-input" type="radio" name="prSort" value="-pageView" ng-model="prOrderBy" />
+                <label class="form-check-label">Page View</label>
+              </div>
+            </div>
+          </div>
+          <div class="dropdown mb-2">
+            <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Status
+            </button>
+            <div class="dropdown-menu">
+              <h6 class="dropdown-header">Select status</h6>
+              <div class="form-check dropdown-item">
+                <input class="form-check-input" type="checkbox" value="ready" ng-model="prFilters.status.ready" />
+                <label class="form-check-label">Ready</label>
+              </div>
+              <div class="form-check dropdown-item">
+                <input class="form-check-input" type="checkbox" value="expired" ng-model="prFilters.status.expired" />
+                <label class="form-check-label">Expired</label>
+              </div>
+              <div class="form-check dropdown-item">
+                <input class="form-check-input" type="checkbox" value="removed" ng-model="prFilters.status.removed" />
+                <label class="form-check-label">Removed</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex flex-wrap mt-2">
+        <div class="alert alert-info alert-dismissible my-0 mr-2 mb-2" ng-show="!v" role="alert" ng-repeat="(f, v) in prFilters.status">
+          <strong>{{f | title}}</strong>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="prFilters.status[f] = true;">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      </div>
+    </form>
+  </section>
+
+  <section class="vm-usage-grid mb-3" ng-if="activeTab == 'repositories'">
+    <article class="vm-usage-card">
+      <h6>Repository Quota</h6>
+      <div class="progress position-relative">
+        <div
+          class="progress-bar"
+          ng-class="{'progress-bar-striped progress-bar-animated w-100 bg-dark': !quota, 'bg-success': quota.repository.percent < 25 || quota.repository.total == 0, 'bg-danger': quota.repository.percent > 95 && quota.repository.total > 0, 'bg-warning': quota.repository.percent > 75 && quota.repository.total > 0 }"
+          role="progressbar"
+          style="width: {{quota.repository.percent}}%;"
+          aria-valuenow="{{quota.repository.used}}"
+          aria-valuemin="0"
+          aria-valuemax="{{quota.repository.total}}"
+        ></div>
+        <span class="justify-content-center d-flex position-absolute w-100" ng-show="quota">
+          {{quota.repository.used | number}}/{{quota.repository.total}}
+        </span>
+      </div>
+    </article>
+    <article class="vm-usage-card">
+      <h6>Storage Quota</h6>
+      <div class="progress position-relative">
+        <div
+          class="progress-bar"
+          ng-class="{'progress-bar-striped progress-bar-animated w-100 bg-dark': !quota, 'bg-success': quota.storage.percent < 25 || quota.storage.total == 0, 'bg-danger': quota.storage.percent > 95 && quota.storage.total > 0, 'bg-warning': quota.storage.percent > 75 && quota.storage.total > 0 }"
+          role="progressbar"
+          style="width: {{quota.storage.percent}}%;"
+          aria-valuenow="{{quota.storage.used}}"
+          aria-valuemin="0"
+          aria-valuemax="{{quota.storage.total}}"
+        ></div>
+        <span ng-show="quota" class="justify-content-center d-flex position-absolute w-100">
+          {{quota.storage.used | humanFileSize}}/{{quota.storage.total | humanFileSize}}
+        </span>
+      </div>
+    </article>
+    <article class="vm-usage-card">
+      <h6>File Quota</h6>
+      <div class="progress position-relative">
+        <div
+          class="progress-bar"
+          ng-class="{'progress-bar-striped progress-bar-animated w-100 bg-dark': !quota, 'bg-success': quota.file.percent < 25 || quota.file.total == 0, 'bg-danger': quota.file.percent > 95 && quota.file.total > 0, 'bg-warning': quota.file.percent > 75 && quota.file.total > 0 }"
+          role="progressbar"
+          style="width: {{quota.file.percent}}%;"
+          aria-valuenow="{{quota.file.used}}"
+          aria-valuemin="0"
+          aria-valuemax="{{quota.file.total}}"
+        ></div>
+        <span class="justify-content-center d-flex position-absolute w-100" ng-show="quota">
+          {{quota.file.used | number}}/{{quota.file.total || "unlimited"}}
+        </span>
+      </div>
+    </article>
+  </section>
+
+  <section class="vm-repo-cards" ng-if="activeTab == 'repositories'">
+    <article
+      class="vm-repo-card"
+      ng-class="{'expired': repo.status == 'expired','removed': repo.status == 'removed','error': repo.status == 'error' }"
+      ng-repeat="repo in repositories| filter:repoFiler| orderBy:repoOrderBy as filteredRepositories"
+    >
+      <div class="d-flex justify-content-between align-items-start flex-wrap">
+        <div class="mb-2 pr-3">
+          <h3 class="mb-1">
+            <a ng-href="/r/{{repo.repoId}}" ng-bind="repo.repoId"></a>
+            <span class="badge" ng-class="{'badge-warning': repo.status == 'removed' || repo.status == 'expired' || repo.status == 'removing' || repo.status == 'expiring', 'badge-info': repo.status == 'preparing' || repo.status == 'download', 'badge-success': repo.status == 'ready', 'badge-danger': repo.status == 'error'}">
+              <span ng-bind="repo.status | title"></span>
+              <span ng-if="repo.status == 'error'" ng-bind="': ' + repo.statusMessage"></span>
+            </span>
+          </h3>
+          <div class="vm-muted">
+            <span class="repository mr-2">
+              <i class="fab fa-github" aria-hidden="true"></i>
+              <a href="https://github.com/{{repo.source.fullName}}/" class="fullName" ng-bind="repo.source.fullName"></a>
+            </span>
+            <span class="branch mr-2" ng-if="repo.options.update">
+              <i class="fas fa-code-branch" aria-hidden="true"></i>
+              <a href="https://github.com/{{repo.source.fullName}}/tree/{{repo.source.branch}}" class="branch" ng-bind="repo.source.branch"></a>
+            </span>
+            <span class="commit mr-2" ng-if="!repo.options.update">
+              @<a href="https://github.com/{{repo.source.fullName}}/tree/{{repo.source.commit}}" class="commit" ng-bind="repo.source.commit.substring(0, 8)"></a>
+            </span>
+            <span>anonymized {{repo.anonymizeDate | humanTime}}</span>
+          </div>
+        </div>
+        <div class="dropdown mb-2">
+          <button class="btn black_border dropdown-toggle btn-sm" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Actions
+          </button>
+          <div class="dropdown-menu dropdown-menu-right">
+            <a class="dropdown-item" href="/anonymize/{{repo.repoId}}"><i class="far fa-edit" aria-hidden="true"></i> Edit</a>
+            <a class="dropdown-item" href="#" ng-show="repo.status == 'ready' || repo.status == 'error'" ng-click="updateRepository(repo)"><i class="fas fa-sync"></i> Force update</a>
+            <a class="dropdown-item" href="#" ng-show="repo.status == 'removed'" ng-click="updateRepository(repo)"><i class="fas fa-check-circle"></i> Enable</a>
+            <a class="dropdown-item" href="#" ng-show="repo.status == 'ready'" ng-click="removeRepository(repo)"><i class="fas fa-trash-alt"></i> Remove</a>
+            <a class="dropdown-item" href="/r/{{repo.repoId}}/"><i class="fa fa-eye" aria-hidden="true"></i> View Repo</a>
+            <a class="dropdown-item" href="/w/{{repo.repoId}}/" target="_self" ng-if="repo.options.page && repo.status == 'ready'"><i class="fas fa-globe"></i> View Page</a>
+          </div>
+        </div>
+      </div>
+      <div class="vm-chip-row">
+        <span class="vm-chip" title="Terms: {{::repo.options.terms.join(', ')}}" data-toggle="tooltip" data-placement="bottom"><i class="fas fa-shield-alt"></i> {{::repo.options.terms.length | number}} terms</span>
+        <span class="vm-chip" title="Size: {{::repo.size.storage | humanFileSize}}" data-toggle="tooltip" data-placement="bottom"><i class="fas fa-database"></i> {{::repo.size.storage | humanFileSize}}</span>
+        <span class="vm-chip" title="View: {{::repo.pageView | number}}" data-toggle="tooltip" data-placement="bottom"><i class="far fa-eye" aria-hidden="true"></i> {{::repo.pageView | number}} views</span>
+        <span class="vm-chip" title="Last view: {{::repo.lastView | date}}" data-toggle="tooltip" data-placement="bottom"><i class="far fa-calendar-alt" aria-hidden="true"></i> Last view {{::repo.lastView | humanTime}}</span>
+        <span class="vm-chip" ng-if="repo.options.expirationMode!='never' && repo.status == 'ready'"><i class="far fa-clock" aria-hidden="true"></i> Expires {{repo.options.expirationDate | humanTime}}</span>
+      </div>
+      <div class="vm-inline-actions mt-3">
+        <a class="btn btn-primary btn-sm mr-2 mb-2" href="/r/{{repo.repoId}}/"><i class="fa fa-eye" aria-hidden="true"></i> Open Anonymous Repo</a>
+        <a class="btn btn-secondary btn-sm mr-2 mb-2" href="/w/{{repo.repoId}}/" target="_self" ng-if="repo.options.page && repo.status == 'ready'"><i class="fas fa-globe"></i> Open Page</a>
+        <button class="btn btn-secondary btn-sm mb-2" type="button" ng-click="copyMirrorLink(repo.repoId)"><i class="far fa-copy"></i> Copy Anonymous Link</button>
+      </div>
+    </article>
+    <div class="vm-empty-state" ng-if="filteredRepositories.length == 0">There is no repository to display.</div>
+  </section>
+
+  <section class="vm-repo-cards" ng-if="activeTab == 'pull_requests'">
+    <article
+      class="vm-repo-card"
+      ng-class="{'expired': pr.status == 'expired','removed': pr.status == 'removed','error': pr.status == 'error' }"
+      ng-repeat="pr in pullRequests| filter:pullRequestFilter| orderBy:prOrderBy as filteredPullRequests"
+    >
+      <div class="d-flex justify-content-between align-items-start flex-wrap">
+        <div class="mb-2 pr-3">
+          <h3 class="mb-1">
+            <a ng-href="/pr/{{pr.pullRequestId}}" ng-bind="pr.pullRequestId"></a>
+            <span class="badge" ng-class="{'badge-warning': pr.status == 'removed' || pr.status == 'expired' || pr.status == 'removing' || pr.status == 'expiring', 'badge-info': pr.status == 'preparing' || pr.status == 'download', 'badge-success': pr.status == 'ready', 'badge-danger': pr.status == 'error'}">
+              <span ng-bind="pr.status | title"></span>
+              <span ng-if="pr.status == 'error'" ng-bind="': ' + pr.statusMessage"></span>
+            </span>
+          </h3>
+          <div class="vm-muted">
+            <span class="pull-request mr-2">
+              <i class="fab fa-github" aria-hidden="true"></i>
+              <a href="https://github.com/{{pr.source.repositoryFullName}}/pull/{{pr.source.pullRequestId}}" class="fullName">{{pr.source.repositoryFullName}}@{{pr.source.pullRequestId}}</a>
+            </span>
+            <span class="badge" ng-class="{'badge-success':pr.merged, 'badge-warning':pr.state=='open', 'badge-danger':pr.state=='closed' &&!pr.merged}">
+              {{pr.merged?"merged":pr.state | title}}
+            </span>
+            <span>anonymized {{pr.anonymizeDate | humanTime}}</span>
+          </div>
+        </div>
+        <div class="dropdown mb-2">
+          <button class="btn black_border dropdown-toggle btn-sm" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Actions
+          </button>
+          <div class="dropdown-menu dropdown-menu-right">
+            <a class="dropdown-item" href="/pull-request-anonymize/{{pr.pullRequestId}}"><i class="far fa-edit" aria-hidden="true"></i> Edit</a>
+            <a class="dropdown-item" href="#" ng-show="pr.status == 'ready' || pr.status == 'error'" ng-click="updatePullRequest(pr)"><i class="fas fa-sync"></i> Force update</a>
+            <a class="dropdown-item" href="#" ng-show="pr.status == 'removed'" ng-click="updatePullRequest(pr)"><i class="fas fa-check-circle"></i> Enable</a>
+            <a class="dropdown-item" href="#" ng-show="pr.status == 'ready'" ng-click="removePullRequest(pr)"><i class="fas fa-trash-alt"></i> Remove</a>
+            <a class="dropdown-item" href="/pr/{{pr.pullRequestId}}/"><i class="fa fa-eye" aria-hidden="true"></i> View PR</a>
+          </div>
+        </div>
+      </div>
+      <div class="vm-chip-row">
+        <span class="vm-chip" title="Terms: {{::pr.options.terms.join(', ')}}" data-toggle="tooltip" data-placement="bottom"><i class="fas fa-shield-alt"></i> {{::pr.options.terms.length | number}} terms</span>
+        <span class="vm-chip" title="View: {{::pr.pageView | number}}" data-toggle="tooltip" data-placement="bottom"><i class="far fa-eye" aria-hidden="true"></i> {{::pr.pageView | number}} views</span>
+        <span class="vm-chip" title="Last view: {{::pr.lastView | date}}" data-toggle="tooltip" data-placement="bottom"><i class="far fa-calendar-alt" aria-hidden="true"></i> Last view {{::pr.lastView | humanTime}}</span>
+        <span class="vm-chip" ng-if="pr.options.expirationMode!='never' && pr.status == 'ready'"><i class="far fa-clock" aria-hidden="true"></i> Expires {{pr.options.expirationDate | humanTime}}</span>
+      </div>
+      <div class="vm-inline-actions mt-3">
+        <a class="btn btn-primary btn-sm mr-2 mb-2" href="/pr/{{pr.pullRequestId}}/"><i class="fa fa-eye" aria-hidden="true"></i> Open Anonymous PR</a>
+        <button class="btn btn-secondary btn-sm mb-2" type="button" ng-click="copyPullRequestLink(pr.pullRequestId)"><i class="far fa-copy"></i> Copy Anonymous PR Link</button>
+      </div>
+    </article>
+    <div class="vm-empty-state" ng-if="filteredPullRequests.length == 0">There is no pull request to display.</div>
+  </section>
+</div>
