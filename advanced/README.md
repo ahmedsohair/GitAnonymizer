@@ -1,11 +1,11 @@
-# VeilMirror
+# GitAnonymizer
 
-VeilMirror is a system that helps anonymize GitHub repositories for double-anonymous paper submissions. A public instance of VeilMirror is hosted at https://your-hostname/.
+GitAnonymizer is a system that helps anonymize GitHub repositories for double-anonymous paper submissions. A public instance of GitAnonymizer is hosted at https://your-hostname/.
 
 ![screenshot](https://user-images.githubusercontent.com/5577568/217193282-42f608d3-2b46-4ebc-90df-772f248605be.png)
 
 
-VeilMirror anonymizes the following:
+GitAnonymizer anonymizes the following:
 
 - GitHub repository owner, organization, and name
 - File and directory names
@@ -15,18 +15,18 @@ VeilMirror anonymizes the following:
 
 ### Public instance
 
-**https://your-hostname/**
+**https://gitanonymizer-production.up.railway.app/**
 
 ### CLI
 
 This CLI tool allows you to anonymize your GitHub repositories locally, generating an anonymized zip file based on your configuration settings.
 
 ```bash
-# Install the VeilMirror CLI tool
-npm install -g @veilmirror/platform
+# Install the GitAnonymizer CLI tool
+npm install -g @GitAnonymizer/platform
 
-# Run the VeilMirror CLI tool
-veilmirror
+# Run the GitAnonymizer CLI tool
+GitAnonymizer
 ```
 
 ### Own instance
@@ -34,8 +34,8 @@ veilmirror
 #### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-org/veilmirror
-cd veilmirror
+git clone https://github.com/your-org/GitAnonymizer
+cd GitAnonymizer
 npm i
 ```
 
@@ -62,15 +62,15 @@ MONGODB_URI=mongodb://<user>:<password>@mongodb:27017/production
 - The callback of the GitHub app needs to be defined as `https://<host>/github/auth` (the same as defined in `AUTH_CALLBACK`).
 - On Railway, set `APP_BASE_URL=https://<your-domain>`. If `RAILWAY_PUBLIC_DOMAIN` is available, callback/hostname can be inferred automatically.
 
-#### 3. Start VeilMirror server
+#### 3. Start GitAnonymizer server
 
 ```bash
 docker-compose up -d
 ```
 
-#### 4. Go to VeilMirror
+#### 4. Go to GitAnonymizer
 
-Go to http://localhost:5000. By default, VeilMirror uses port 5000. It can be changed in `docker-compose.yml`. I would recommand to put VeilMirror behind ngnix to handle the https certificates.
+Go to http://localhost:5000. By default, GitAnonymizer uses port 5000. It can be changed in `docker-compose.yml`. I would recommand to put GitAnonymizer behind ngnix to handle the https certificates.
 
 ## What is the scope of anonymization?
 
@@ -78,7 +78,7 @@ In double-anonymous peer-review, the boundary of anonymization is the paper plus
 
 ## How does it work?
 
-VeilMirror either downloads the complete repository and anonymizes the content of the file or proxies the request to GitHub. In both cases, the original and anonymized versions of the file are cached on the server.
+GitAnonymizer either downloads the complete repository and anonymizes the content of the file or proxies the request to GitHub. In both cases, the original and anonymized versions of the file are cached on the server.
 
 ## Related tools
 
