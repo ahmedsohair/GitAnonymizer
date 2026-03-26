@@ -1,6 +1,6 @@
 # GitAnonymizer
 
-GitAnonymizer is a system that helps anonymize GitHub repositories for double-anonymous paper submissions. A public instance of GitAnonymizer is hosted at https://your-hostname/.
+GitAnonymizer is a system that helps anonymize GitHub repositories for double-anonymous paper submissions. A public instance of GitAnonymizer is hosted at https://gitanonymizer-production.up.railway.app/.
 
 GitAnonymizer anonymizes the following:
 
